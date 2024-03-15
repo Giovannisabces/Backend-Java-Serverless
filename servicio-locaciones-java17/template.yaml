@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  servicio-locaciones-java17
+
+  Sample SAM Template for servicio-locaciones-java17
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 20
+    MemorySize: 512
+Parameters:
+  TableName:
+    Type: String
+    Default: 'location'
+    Description: (Required) The name of the new DynamoDB table you want to create and save to. Minimum 3 characters
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: 'Required parameter. Must be characters only. No numbers allowed.'
+  TableBooks:
+    Type: String
+    Default: 'libro'
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: 'Required parameter. Must be characters only. No numbers allowed.'
+Resources:
+  #Ticket API Gateway
+  #Stage name: dev
+  ServiciosApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Name: servicios-api-gateway
+
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: HelloWorldFunction
+      Handler: helloworld.App::handleRequest
+      Runtime: java17
+      Architectures:
+        - arm64
+      MemorySize: 512
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          PARAM1: VALUE
+      Events:
+        ApiEvents:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /location
+            Method: GET
+            RestApiId: !Ref ServiciosApiGateway
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: location
+
+        
+  # locations:
+  #   Type: 'AWS::DynamoDB::Table'
+  #   Properties:
+  #     TableName: !Ref TableName
+  #     AttributeDefinitions:
+  #       - AttributeName: itemId
+  #         AttributeType: S
+  #       - AttributeName: lat
+  #         AttributeType: S
+  #       - AttributeName: lng
+  #         AttributeType: S
+  #       - AttributeName: title
+  #         AttributeType: S
+  #       - AttributeName: direction
+  #         AttributeType: S
+  #       - AttributeName: liderazgo
+  #         AttributeType: S
+  #       - AttributeName: movil
+  #         AttributeType: S
+  #       - AttributeName: email
+  #         AttributeType: S
+  #       - AttributeName: web
+  #         AttributeType: S
+  #     KeySchema:
+  #       - AttributeName: itemId
+  #         KeyType: HASH
+  #     BillingMode: PROVISIONED
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 10
+  #       WriteCapacityUnits: 10
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  ServiciosApiGateway:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServiciosApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/location/"
+    # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt HelloWorldFunctionRole.Arn

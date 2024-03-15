@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'servicio-locaciones-java17
+
+  Sample SAM Template for servicio-locaciones-java17
+
+  '
+Globals:
+  Function:
+    Timeout: 20
+    MemorySize: 512
+Parameters:
+  TableName:
+    Type: String
+    Default: location
+    Description: (Required) The name of the new DynamoDB table you want to create
+      and save to. Minimum 3 characters
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: Required parameter. Must be characters only. No numbers
+      allowed.
+  TableBooks:
+    Type: String
+    Default: libro
+    AllowedPattern: ^[A-Za-z]+$
+    ConstraintDescription: Required parameter. Must be characters only. No numbers
+      allowed.
+Resources:
+  ServiciosApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Name: servicios-api-gateway
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: HelloWorldFunction
+      Handler: helloworld.App::handleRequest
+      Runtime: java17
+      Architectures:
+      - arm64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /location
+            Method: GET
+            RestApiId:
+              Ref: ServiciosApiGateway
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: location
+    Metadata:
+      SamResourceId: HelloWorldFunction
+Outputs:
+  ServiciosApiGateway:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value:
+      Fn::Sub: https://${ServiciosApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/location/
+  HelloWorldFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunction
+      - Arn
+  HelloWorldFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunctionRole
+      - Arn
