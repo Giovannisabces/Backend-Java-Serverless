@@ -23,7 +23,7 @@ Parameters:
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: 'Required parameter. Must be characters only. No numbers allowed.'
 Resources:
-  #Ticket API Gateway
+  #Service Locations API Gateway
   #Stage name: dev
   ServiciosApiGateway:
     Type: AWS::Serverless::Api
@@ -39,10 +39,8 @@ Resources:
       Runtime: java17
       Architectures:
         - arm64
+        #  - x86_64
       MemorySize: 512
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
       Events:
         ApiEvents:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -93,7 +91,7 @@ Outputs:
   ServiciosApiGateway:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServiciosApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/location/"
-    # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  #  # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn

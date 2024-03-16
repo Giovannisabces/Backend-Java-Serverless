@@ -1,4 +1,12 @@
 # GET https://2yspysf4n4.execute-api.us-east-1.amazonaws.com/dev/location 
 
 
-GET https://2yspysf4n4.execute-api.us-east-1.amazonaws.com/dev/location
+# GET https://2yspysf4n4.execute-api.us-east-1.amazonaws.com/dev/location
+
+
+GET  http://127.0.0.1:3000/
+content-type: application/json
+
+{
+    "name": "sample",
+}
