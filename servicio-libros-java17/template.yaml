@@ -13,7 +13,7 @@ Globals:
 Parameters:
   TableName:
     Type: String
-    Default: 'location'
+    Default: 'book'
     Description: (Required) The name of the new DynamoDB table you want to create and save to. Minimum 3 characters
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: 'Required parameter. Must be characters only. No numbers allowed.'
@@ -31,11 +31,11 @@ Resources:
       StageName: dev
       Name: servicios-api-gateway
 
-  LocationFunction:
+  BookFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: LocationFunction
-      Handler: location.App::handleRequest
+      CodeUri: BookFunction
+      Handler: book.App::handleRequest
       Runtime: java17
       Architectures:
         - arm64
@@ -45,24 +45,41 @@ Resources:
         ApiEvents:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /location
+            Path: /book
             Method: GET
             RestApiId: !Ref ServiciosApiGateway
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: location
+            # TableName: book
+            TableName: !Ref TableBooks
+        
+  books:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      # TableName: book
+      TableName: !Ref TableBooks
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: HASH
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   ServiciosApiGateway:
-    Description: "API Gateway endpoint URL for Prod stage for Location function"
+    Description: "API Gateway endpoint URL for Prod stage for Book function"
     Value: !Sub "https://${ServiciosApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/location/"
   #  # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  LocationFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt LocationFunction.Arn
-  LocationFunctionIamRole:
-    Description: "Implicit IAM Role created for Location function"
-    Value: !GetAtt LocationFunctionRole.Arn
+  BookFunction:
+    Description: "Book Lambda Function ARN"
+    Value: !GetAtt BookFunction.Arn
+  BookFunctionIamRole:
+    Description: "Implicit IAM Role created for Book function"
+    Value: !GetAtt BookFunctionRole.Arn

@@ -12,7 +12,7 @@ Globals:
 Parameters:
   TableName:
     Type: String
-    Default: location
+    Default: book
     Description: (Required) The name of the new DynamoDB table you want to create
       and save to. Minimum 3 characters
     AllowedPattern: ^[A-Za-z]+$
@@ -20,7 +20,7 @@ Parameters:
       allowed.
   TableBooks:
     Type: String
-    Default: libro
+    Default: book
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: Required parameter. Must be characters only. No numbers
       allowed.
@@ -30,11 +30,11 @@ Resources:
     Properties:
       StageName: dev
       Name: servicios-api-gateway
-  LocationFunction:
+  BookFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: LocationFunction
-      Handler: location.App::handleRequest
+      CodeUri: BookFunction
+      Handler: book.App::handleRequest
       Runtime: java17
       Architectures:
       - arm64
@@ -43,29 +43,43 @@ Resources:
         ApiEvents:
           Type: Api
           Properties:
-            Path: /location
+            Path: /book
             Method: GET
             RestApiId:
               Ref: ServiciosApiGateway
       Policies:
       - DynamoDBCrudPolicy:
-          TableName: location
+          TableName: book
     Metadata:
-      SamResourceId: LocationFunction
+      SamResourceId: BookFunction
+  books:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: book
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
 Outputs:
   ServiciosApiGateway:
-    Description: API Gateway endpoint URL for Prod stage for Location function
+    Description: API Gateway endpoint URL for Prod stage for Book function
     Value:
       Fn::Sub: https://${ServiciosApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Prod/location/
-  LocationFunction:
-    Description: Hello World Lambda Function ARN
+  BookFunction:
+    Description: Book Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - LocationFunction
+      - BookFunction
       - Arn
-  LocationFunctionIamRole:
-    Description: Implicit IAM Role created for Location function
+  BookFunctionIamRole:
+    Description: Implicit IAM Role created for Book function
     Value:
       Fn::GetAtt:
-      - LocationFunctionRole
+      - BookFunctionRole
       - Arn
