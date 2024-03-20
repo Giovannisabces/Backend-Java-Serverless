@@ -1,8 +1,10 @@
 iglesiasasociadas.data.ts
 servicio-locaciones-java17\.aws-sam
 servicio-locaciones-java17/.aws-sam
-servicio-locaciones-java17/HelloWorldFunction/target/classes/helloworld
-servicio-locaciones-java17/target/
+servicio-locaciones-java17/HelloWorldFunction/target/classes/location
+servicio-locaciones-java17\target\
+servicio-libros-java17\target\
+servicio-libros-java17\.asw-sam\
 servicio-locaciones-java17/pom.xml.tag
 servicio-locaciones-java17/pom.xml.releaseBackup
 servicio-locaciones-java17/pom.xml.versionsBackup
