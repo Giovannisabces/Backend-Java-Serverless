@@ -1,8 +1,9 @@
 iglesiasasociadas.data.ts
 servicio-locaciones-java17\.aws-sam
 servicio-locaciones-java17/.aws-sam
-servicio-locaciones-java17/HelloWorldFunction/target/classes/location
-servicio-locaciones-java17\target\
+servicio-locaciones-java17/*/target/*
+*/*/target/*
+servicio-locaciones-java17\target\*
 servicio-libros-java17\target\
 servicio-libros-java17\.asw-sam\
 servicio-locaciones-java17/pom.xml.tag
@@ -13,5 +14,5 @@ servicio-locaciones-java17/release.properties
 servicio-locaciones-java17/dependency-reduced-pom.xml
 servicio-locaciones-java17/buildNumber.properties
 servicio-locaciones-java17/.mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+*/.aws-sam/
 servicio-locaciones-java17/.mvn/wrapper/maven-wrapper.jar

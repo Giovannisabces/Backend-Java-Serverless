@@ -20,7 +20,7 @@ Parameters:
       allowed.
   TableBooks:
     Type: String
-    Default: libro
+    Default: book
     AllowedPattern: ^[A-Za-z]+$
     ConstraintDescription: Required parameter. Must be characters only. No numbers
       allowed.
@@ -35,9 +35,9 @@ Resources:
     Properties:
       CodeUri: LocationFunction
       Handler: location.App::handleRequest
-      Runtime: java17
+      Runtime: java11
       Architectures:
-      - arm64
+      - x86_64
       MemorySize: 512
       Events:
         ApiEvents:
