@@ -15,4 +15,5 @@ servicio-locaciones-java17/dependency-reduced-pom.xml
 servicio-locaciones-java17/buildNumber.properties
 servicio-locaciones-java17/.mvn/timing.properties
 */.aws-sam/
+
 servicio-locaciones-java17/.mvn/wrapper/maven-wrapper.jar
